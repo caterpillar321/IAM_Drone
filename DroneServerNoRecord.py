@@ -5,6 +5,7 @@ import threading
 import control
 import drone
 from sendStreamByCPU import sendV
+from ipAutoFinder import BleTools
 #from recorder import record
 from utility import kill_process_on_port, get_local_ip, internetAvailable, check_existing_socket
 import time
@@ -140,8 +141,8 @@ def manage_threads(sock, sockI,  addr):
             file.write(f"{fps}\n")
             file.close()
 
-        thread2 = threading.Thread(target=recv, args=(sock, addr))
-        process2 = threading.Thread(target=sendInfo, args=(sockI, sockL, ))
+        thread2 = threading.Thread(target=recv, args=(sock, ))
+        process2 = threading.Thread(target=sendInfo, args=(sockI,))
         threadcheck = threading.Thread(target=check_existing_socket, args=(sockI, ))
         
         thread2.start()
@@ -191,11 +192,16 @@ if __name__ == "__main__":
     cam = True
     local_ip = get_local_ip()
     Host = local_ip
+    SERVICE_UUID = "0000180d-0000-1000-8000-00805f9b34fb"
+    CHARACTERISTIC_UUID = "00002a37-0000-1000-8000-00805f9b34fb"
     Port = 5000
     PortV = 5005
     PortInfo = 5010
     PortRV = 5015
     isConnected = False
+
+    ble_tools = BleTools(SERVICE_UUID, CHARACTERISTIC_UUID)
+    ble_tools.send_message_sync(Host)
 
     #drone.droneStart()
     server_thread = threading.Thread(target=server)
