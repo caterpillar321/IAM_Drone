@@ -6,9 +6,9 @@ import time
 import subprocess
 import pickle
 import struct
-from turbojpeg import TurboJPEG
+#from turbojpeg import TurboJPEG
 
-jpeg = TurboJPEG()
+#jpeg = TurboJPEG()
 
 def sendV(host, portV):
     with open('config.txt', 'r') as file:
@@ -39,9 +39,9 @@ def sendV(host, portV):
         ret, frame = cap.read()
         if not ret:
             break
-        #_, img_encoded = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 90])  # 압축률 조정
-        data = jpeg.encode(frame, quality=95)
-        #data = img_encoded.tobytes()
+        _, img_encoded = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 90])  # 압축률 조정
+        #data = jpeg.encode(frame, quality=95)
+        data = img_encoded.tobytes()
         size = len(data)
         print(f"frame {i} : {size}")
         i += 1
