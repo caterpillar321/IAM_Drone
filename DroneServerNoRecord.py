@@ -11,6 +11,7 @@ from utility import kill_process_on_port, get_local_ip, internetAvailable, check
 import time
 import json
 import struct
+import droneEmulateGUI
 
 def server():
     global isConnected
@@ -33,6 +34,7 @@ def server():
         
         sock, addr = tsock.accept()
         sockI, addr = tsockI.accept()
+        sockI.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sockI.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -96,7 +98,9 @@ def sendInfo(sockI):
                 "yaw": f"{yaw:03.0f}",
                 "ralt": f"{(drone.relativeALT):03.0f}",
                 "lat": f"{drone.lat}",
-                "lng": f"{drone.lng}"
+                "lng": f"{drone.lng}",
+                "battery": f"{drone.batteryRemain}",
+                "mode" : f"{drone.flightMode}"
             })
 
             size = len(message.encode())
@@ -199,6 +203,10 @@ if __name__ == "__main__":
     PortInfo = 5010
     PortRV = 5015
     isConnected = False
+
+    threadGui = threading.Thread(target=droneEmulateGUI.setGUI, daemon=True)
+    threadGui.start()
+    print("gui set")
 
     ble_tools = BleTools(SERVICE_UUID, CHARACTERISTIC_UUID)
     ble_tools.send_message_sync(Host)
