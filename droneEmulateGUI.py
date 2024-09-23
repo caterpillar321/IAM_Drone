@@ -1,77 +1,96 @@
 import tkinter as tk
 from tkinter import ttk
-import drone  # drone.py 모듈을 가져옴
+import drone  
 
 labelRoll = None
 labelPitch = None
 labelYaw = None
 
 def update_roll(value):
-    # drone.py의 roll 값을 슬라이더 값으로 업데이트
     drone.roll = int(float(value))
     labelRoll.config(text=f"{drone.roll}")
 
 def update_pitch(value):
-    # drone.py의 roll 값을 슬라이더 값으로 업데이트
     drone.pitch = int(float(value))
     labelPitch.config(text=f"{drone.pitch}")
 
 def update_yaw(value):
-    # drone.py의 roll 값을 슬라이더 값으로 업데이트
     drone.yaw = int(float(value))
     labelYaw.config(text=f"{drone.yaw}")
 
+def update_alt(value):
+    drone.relativeALT = int(float(value))
+    labelYaw.config(text=f"{drone.relativeALT}")
+
 
 def setGUI():
-    global labelRoll, labelPitch, labelYaw
-    # Tkinter 창 생성
+    global labelRoll, labelPitch, labelYaw, labelAlt
     root = tk.Tk()
-    root.title("Roll 슬라이더")
-    root.geometry("300x400")
+    root.title("DRONE GUI")
+    root.geometry("300x1000")
 
-    # 레이블 생성
+
+    labelRollText = tk.Label(root, text="roll")
+    labelRollText.pack(pady=1)
     labelRoll = tk.Label(root, text=f"{drone.roll}")
-    labelRoll.pack(pady=10)
-
-    # 슬라이더 생성
+    labelRoll.pack(pady=1)
+  
     sliderRoll = ttk.Scale(
         root,
         from_=0,
         to=360,
         orient="horizontal",
         length=250,
-        command=update_roll  # 슬라이더 값이 변경될 때 update_roll 함수 호출
+        command=update_roll  
     )
-    sliderRoll.pack(pady=20)
+    sliderRoll.pack(pady=2)
 
+
+    labelPitchText = tk.Label(root, text="pitch")
+    labelPitchText.pack(pady=1)
     labelPitch = tk.Label(root, text=f"{drone.pitch}")
-    labelPitch.pack(pady=10)
-
+    labelPitch.pack(pady=1)
+    
     sliderPitch = ttk.Scale(
         root,
         from_=0,
         to=360,
         orient="horizontal",
         length=250,
-        command=update_pitch  # 슬라이더 값이 변경될 때 update_roll 함수 호출
+        command=update_pitch  
     )
-    sliderPitch.pack(pady=20)
+    sliderPitch.pack(pady=2)
 
+
+    labelYawText = tk.Label(root, text="yaw")
+    labelYawText.pack(pady=1)
     labelYaw = tk.Label(root, text=f"{drone.yaw}")
-    labelYaw.pack(pady=10)
-
+    labelYaw.pack(pady=1)
+    
     sliderYaw = ttk.Scale(
         root,
         from_=0,
         to=360,
         orient="horizontal",
         length=250,
-        command=update_yaw  # 슬라이더 값이 변경될 때 update_roll 함수 호출
+        command=update_yaw  
     )
-    sliderYaw.pack(pady=20)
+    sliderYaw.pack(pady=2)
 
-    # 메인 이벤트 루프 실행
+
+    labelAltText = tk.Label(root, text="Altitude")
+    labelAltText.pack(pady=1)
+    labelAlt = tk.Label(root, text=f"{drone.relativeALT}")
+    labelAlt.pack(pady=1)
+    
+    sliderYaw = ttk.Scale(
+        root,
+        from_=0,
+        to=360,
+        orient="horizontal",
+        length=250,
+        command=update_alt  
+    )
+    sliderYaw.pack(pady=2)
+
     root.mainloop()
-
-
-
