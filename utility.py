@@ -52,8 +52,8 @@ def check_existing_socket(sock, interval=5):
                     print("Socket connection closed by the remote host")
                     break
                 print("Received data from socket:", data)
-            if writable:
-                print("Socket is writable")
+            #if writable:
+                #print("Socket is writable")
             if exceptional:
                 print("Socket has an exceptional condition")
                 break
