@@ -5,6 +5,8 @@ import drone
 labelRoll = None
 labelPitch = None
 labelYaw = None
+labelAlt = None
+labelBattery = None
 
 def update_roll(value):
     drone.roll = int(float(value))
@@ -20,11 +22,18 @@ def update_yaw(value):
 
 def update_alt(value):
     drone.relativeALT = int(float(value))
-    labelYaw.config(text=f"{drone.relativeALT}")
+    labelAlt.config(text=f"{drone.relativeALT}")
+
+def update_battery(value):
+    drone.batteryRemain = int(float(value))
+    labelBattery.config(text=f"{drone.batteryRemain}")
+
+def update_mode(value):
+    drone.flightMode = value
 
 
 def setGUI():
-    global labelRoll, labelPitch, labelYaw, labelAlt
+    global labelRoll, labelPitch, labelYaw, labelAlt, labelBattery
     root = tk.Tk()
     root.title("DRONE GUI")
     root.geometry("300x1000")
@@ -92,5 +101,32 @@ def setGUI():
         command=update_alt  
     )
     sliderYaw.pack(pady=2)
+
+
+    labelBatteryText = tk.Label(root, text="Battery")
+    labelBatteryText.pack(pady=1)
+    labelBattery = tk.Label(root, text=f"{drone.batteryRemain}")
+    labelBattery.pack(pady=1)
+    
+    sliderYaw = ttk.Scale(
+        root,
+        from_=0,
+        to=100,
+        orient="horizontal",
+        length=250,
+        command=update_battery
+    )
+    sliderYaw.pack(pady=2)
+
+
+    labelModeText = tk.Label(root, text="FlightMode")
+    labelModeText.pack(pady=1)
+
+    options = ["Stabilized", "Offboard", "Manual"]
+    # 기본 선택값을 저장하는 변수
+    selected_option = tk.StringVar()
+    selected_option.set(options[0])
+    option_menu = tk.OptionMenu(root, selected_option, *options, command=update_mode)
+    option_menu.pack(pady=2)
 
     root.mainloop()
