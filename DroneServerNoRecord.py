@@ -12,6 +12,7 @@ import time
 import json
 import struct
 import droneEmulateGUI
+import yawtest
 
 def server():
     global isConnected
@@ -109,7 +110,7 @@ def sendInfo(sockI):
 
             sockI.sendall(struct.pack(">L", size))
             sockI.sendall(message.encode())
-            time.sleep(0.1)
+            time.sleep(0.05)
 
     except (ConnectionAbortedError, ConnectionResetError, OSError) as e:
         print(f"error in sendinfo: {e}")
