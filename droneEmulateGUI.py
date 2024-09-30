@@ -7,6 +7,8 @@ labelPitch = None
 labelYaw = None
 labelAlt = None
 labelBattery = None
+labelLat = None
+labelLng = None
 
 def update_roll(value):
     drone.roll = int(float(value))
@@ -28,12 +30,23 @@ def update_battery(value):
     drone.batteryRemain = int(float(value))
     labelBattery.config(text=f"{drone.batteryRemain}")
 
+def update_lat():
+    currentlat = entrylat.get()
+    drone.lat = currentlat
+    labelLat.config(text=f"{drone.lat}")
+
+def update_lng():
+    currentlng = entrylng.get()
+    drone.lng = currentlng
+    labelLng.config(text=f"{drone.lng}")
+
+
 def update_mode(value):
     drone.flightMode = value
 
 
 def setGUI():
-    global labelRoll, labelPitch, labelYaw, labelAlt, labelBattery
+    global labelRoll, labelPitch, labelYaw, labelAlt, labelBattery, labelLat, labelLng, entrylat, entrylng
     root = tk.Tk()
     root.title("DRONE GUI")
     root.geometry("300x1000")
@@ -117,6 +130,27 @@ def setGUI():
         command=update_battery
     )
     sliderYaw.pack(pady=2)
+
+    entrylat = ttk.Entry(root)
+    entrylat.pack(pady=1)
+    labelLatText = ttk.Label(root, text="latitude")
+    labelLatText.pack(pady=1)
+    labelLat = ttk.Label(root, text=f"{drone.lat}")
+    labelLat.pack(pady=1)
+
+    buttonlat = tk.Button(root, text="set lat", command=update_lat)
+    buttonlat.pack(pady=1)
+
+    entrylng = ttk.Entry(root)
+    entrylng.pack(pady=1)
+    labelLngText = ttk.Label(root, text="longtitude")
+    labelLngText.pack(pady=1)
+    labelLng = ttk.Label(root, text=f"{drone.lng}")
+    labelLng.pack(pady=1)
+
+    buttonlng = tk.Button(root, text="set lng", command=update_lng)
+    buttonlng.pack(pady=1)
+
 
 
     labelModeText = tk.Label(root, text="FlightMode")
