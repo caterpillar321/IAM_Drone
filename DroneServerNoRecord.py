@@ -12,7 +12,7 @@ import time
 import json
 import struct
 import droneEmulateGUI
-import yawtest
+
 
 def server():
     global isConnected
