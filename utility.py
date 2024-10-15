@@ -21,7 +21,7 @@ def kill_process_on_port(port):
                 print(f"Error terminating process {pid}: {e}")
     except subprocess.CalledProcessError as e:
         print(f"No process found on port {port}")
-
+"""
 def get_local_ip():
     for interface in netifaces.interfaces():
         addresses = netifaces.ifaddresses(interface)
@@ -30,7 +30,21 @@ def get_local_ip():
                 ip = address['addr']
                 if ip != '127.0.0.1':
                     return ip
+    return None"""
+
+def get_local_ip():
+    docker_interfaces = ['docker0', 'br-', 'veth']  # Docker 인터페이스 필터
+    for interface in netifaces.interfaces():
+        if any(docker in interface for docker in docker_interfaces):
+            continue  # Docker 인터페이스는 무시
+        addresses = netifaces.ifaddresses(interface)
+        if netifaces.AF_INET in addresses:
+            for address in addresses[netifaces.AF_INET]:
+                ip = address['addr']
+                if ip != '127.0.0.1':
+                    return ip
     return None
+
 
 def internetAvailable():
     try:
