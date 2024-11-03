@@ -11,6 +11,8 @@ from utility import kill_process_on_port, get_local_ip, internetAvailable, check
 import time
 import json
 import struct
+import slamEncoder
+import numpy as np
 #import droneEmulateGUI
 
 
@@ -76,6 +78,21 @@ def recv(sock):
                 file.close()
             isConnected = False
             break
+
+def sendSLAMData(sockL):
+    while isConnected:
+        #slamEncoder.testArray = slamEncoder.voxel_downsample_average(slamEncoder.testArray, 0.01)
+        sockL.sendall(struct.pack(">L", 2))
+        sockL.sendall(struct.pack(">L", len(slamEncoder.testArray)))
+        sockL.sendall(struct.pack(">L", len(slamEncoder.testpathArray)))
+        array1_np = np.array(slamEncoder.testArray, dtype=np.float32)
+        sockL.sendall(array1_np.tobytes())
+        array2_np = np.array(slamEncoder.testpathArray, dtype=np.float32)
+        sockL.sendall(array2_np.tobytes())
+
+        #arrayDrone_np = np.array(slamEncoder.dronePos, dtype=np.float32)
+        #sockL.sendall(arrayDrone_np.tobytes())
+        time.sleep(0.1)
 
 def sendInfo(sockI):
     global pitch, yaw, roll
