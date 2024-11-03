@@ -81,7 +81,6 @@ def recv(sock):
 
 def sendSLAMData(sockL):
     while isConnected:
-        #slamEncoder.testArray = slamEncoder.voxel_downsample_average(slamEncoder.testArray, 0.01)
         sockL.sendall(struct.pack(">L", 2))
         sockL.sendall(struct.pack(">L", len(slamEncoder.testArray)))
         sockL.sendall(struct.pack(">L", len(slamEncoder.testpathArray)))
@@ -89,9 +88,6 @@ def sendSLAMData(sockL):
         sockL.sendall(array1_np.tobytes())
         array2_np = np.array(slamEncoder.testpathArray, dtype=np.float32)
         sockL.sendall(array2_np.tobytes())
-
-        #arrayDrone_np = np.array(slamEncoder.dronePos, dtype=np.float32)
-        #sockL.sendall(arrayDrone_np.tobytes())
         time.sleep(0.1)
 
 def sendInfo(sockI):
@@ -166,18 +162,17 @@ def manage_threads(sock, sockI,  addr):
         thread2 = threading.Thread(target=recv, args=(sock, ))
         process2 = threading.Thread(target=sendInfo, args=(sockI,))
         threadcheck = threading.Thread(target=check_existing_socket, args=(sockI, ))
+        threadslam = threading.Thread(target=sendSLAMData, args=(sockL, ))
         
         thread2.start()
         process2.start() 
         threadcheck.start()
+        threadslam.start()
         print("threads start")
 
         if (cam == True):
             process = multiprocessing.Process(target=sendV, args=(Host, PortV))
             process.start()
-
-        #threadRecord = multiprocessing.Process(target= record, args=(sockL, ))
-        #threadRecord.start()
         
         while True:
             with open('status.txt', 'r') as file:
